@@ -1,9 +1,8 @@
 import jwt from "jsonwebtoken";
-import { User, OTP } from "../modules/index.js";
 import { statusCodes, errorMessages } from "../utils/constants/index.js";
 import { ApiError } from "../utils/errorHandler/index.js";
 import dotenv from "dotenv";
-import { logger } from "../utils/logger.js";
+import { logger } from "../utils/winston.js";
 import {loginservice,updatepassword, refreshtokenservice, register, verifyservice, sendotp} from "../services/index.js"
 dotenv.config();
 
@@ -13,6 +12,7 @@ export const registerController = async (req, res, next) => {
     const result=await register(req.body)
     res.status(200).send(result)
   } catch (error) {
+    logger.error(error)
     next(new ApiError(error.statusCode, error.message));
   }
 };
@@ -23,6 +23,7 @@ export const loginController = async (req, res, next) => {
     const result=await loginservice({email,password})
     res.status(200).send(result)
   } catch (error) {
+    logger.error(error)
     next(new ApiError(error.statusCode, error.message));
   }
 };
@@ -31,10 +32,7 @@ export const refreshtokencontroller = async (req, res, next) => {
   try {
     const { token } = req.body;
     const result=await refreshtokenservice(token)
-    res.status(200).send({
-      accessToken:result.accessToken,
-      refreshToken:result.refreshToken
-    })
+    res.send(result)
   } catch (error) {
     next(new ApiError(error.statusCode, error.message));
   }

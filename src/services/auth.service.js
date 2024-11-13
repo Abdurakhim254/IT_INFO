@@ -3,6 +3,7 @@ import { User, OTP } from "../modules/index.js";
 import { otpGenerator, sendMail } from "../helpers/index.js";
 import { statusCodes, errorMessages } from "../utils/constants/index.js";
 import dotenv from "dotenv";
+import {genSalt,hash} from "bcrypt"
 dotenv.config();
 
 export const register = async ({ email, password, name, role }) => {
@@ -64,26 +65,25 @@ export const loginservice = async ({ email, password }) => {
 };
 
 export const refreshtokenservice = async (token) => {
-  const accessSecretKey = process.env.JWT_ACCESS_SECRET;
+  let accessToken=""
+  jwt.verify(token, process.env.JWT_ACCESS_SECRET, (error, decode) => {
+    if (error)
+      throw new Error(statusCodes.FORBIDDEN, errorMessages.FORBIDDEN);
 
-  jwt.verify(token, accessSecretKey, (err, decode) => {
-    if (err) {
-      return new Error(statusCodes.FORBIDDEN, errorMessages.FORBIDDEN);
-    }
-console.log(decode)
-    const accessToken = jwt.sign(
+    // logger.info({ decode });
+
+    accessToken = jwt.sign(
       {
         sub: decode.sub,
         role: decode.role,
       },
-      accessSecretKey,
+      process.env.JWT_ACCESS_SECRET,
       {
         expiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
       }
     );
-    console.log(accessToken);
-    return { accessToken, refreshToken: token };
   });
+  return { accessToken, refreshToken: token };
 };
 
 export const verifyservice = async ({ otp, email }) => {
@@ -121,7 +121,9 @@ export const updatepassword = async (password, email, otp) => {
     otp_code: otp,
     user_id: result._id,
   });
+  const salt=await genSalt(10)
+  const hashpassword=await hash(password,salt)
   await Otp.save();
-  await User.findOneAndUpdate({ email: email }, { password: password });
+  await User.findOneAndUpdate({ email: email }, { password: hashpassword });
   return "Password yangilandi";
 };
