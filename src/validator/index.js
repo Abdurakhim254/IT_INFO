@@ -1,0 +1,5 @@
+export * from "./article.validator.js"
+export * from "./category.validator.js"
+export * from "./user.validator.js"
+export * from "./course.validator.js"
+export * from "./comment.validator.js"
