@@ -1,10 +1,11 @@
 import { User } from "../modules/index.js";
 
+
 export const userservice = async (payload) => {
   const currentuser = await User.findOne({ email: payload.sub }).select({
     password: 0,
   });
-  console.log(currentuser);
+
   if (!currentuser) {
     return "User topilmadi";
   }
@@ -13,7 +14,7 @@ export const userservice = async (payload) => {
 };
 
 export const getusers = async () => {
-  const result = await User.find();
+  const result = await User.find({role:"user"});
   if (result.length >= 1) {
     return result;
   } else {

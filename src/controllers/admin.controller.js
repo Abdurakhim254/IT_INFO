@@ -16,6 +16,7 @@ export const createAdmincontroller = async (req, res, next) => {
 };
 export const getAlladminsController = async (req, res, next) => {
   try {
+    const {sort}=req.query
     const result = await getadmins("admin");
     res.status(200).send(result);
   } catch (error) {

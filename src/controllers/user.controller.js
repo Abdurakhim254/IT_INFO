@@ -19,8 +19,9 @@ export const userController = async (req, res, next) => {
 
 export const getAllusers = async (req, res, next) => {
   try {
-    const result = await getusers();
+    const {sort}=req.query
 
+    const result = await getusers();
     res.status(200).send(result);
   } catch (error) {
     next(new ApiError(error.statusCode, error.message));

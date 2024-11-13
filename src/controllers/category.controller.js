@@ -14,8 +14,9 @@ export const createcategory=async(req,res,next)=>{
 
 export const getallCategory=async(req,res,next)=>{
     try {
+        const {sort}=req.query
         const result = await getallcategory()
-        res.status(200).send(result)
+        res.status(200).send({result,query})
     } catch (error) {
         next(new ApiError(error.statusCode,error.message))
     }

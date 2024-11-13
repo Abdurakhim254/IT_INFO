@@ -3,6 +3,7 @@ import {  ApiError } from "../utils/index.js"
 
 export const getCoursescontroller=async(req,res,next)=>{
     try {
+        const {sort}=req.query
         const result=await getcorses()
         res.status(200).send(result)
     } catch (error) {

@@ -25,7 +25,7 @@ export const authGuard = (req, res, next) => {
         return res.status(403).send("Forbidden");
       }
       req.user = payload;
-      console.log(payload);
+      logger.error(payload)
 
       next();
     });
@@ -57,6 +57,7 @@ export const loginmiddleware = (schema) => {
     }
   };
 };
+
 
 export const verifymiddleware = (schema) => {
   return (req, res, next) => {

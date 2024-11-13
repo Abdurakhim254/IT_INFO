@@ -3,6 +3,7 @@ import {  ApiError } from "../utils/index.js"
 
 export const getAllcommentscontroller=async(req,res,next)=>{
     try {
+        const {sort}=req.query
         const result=await getallcomments()
         res.status(200).send(result)
     } catch (error) {

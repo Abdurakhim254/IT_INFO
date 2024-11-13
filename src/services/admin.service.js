@@ -3,7 +3,7 @@ import { statusCodes, errorMessages } from "../utils/constants/index.js";
 
 export const createadmin = async ({ email, password, name, role }) => {
   const currentuser = await User.findOne({ email });
-  console.log(currentuser);
+
 
   if (!currentuser) {
     const user = new User({ email, password, name, role });
@@ -16,7 +16,7 @@ export const createadmin = async ({ email, password, name, role }) => {
 };
 
 export const getadmins = async (role) => {
-  const result = await User.find({ role: admin });
+  const result = await User.find({ role: role });
   if (result.length >= 1) {
     return result;
   } else {
